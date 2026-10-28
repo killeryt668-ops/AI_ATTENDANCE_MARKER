@@ -1,0 +1,16 @@
+{
+  "name": "ai-attendance-server",
+  "version": "1.0.0",
+  "description": "AI-Driven Multi-Factor Attendance Verification Edge & Cloud Server",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "ws": "^8.17.0"
+  }
+}

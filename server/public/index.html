@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NIR-OmniVerify AI | Multi-Factor Classroom Attendance & Single Camera AI Monitoring</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyber: {
+              900: '#070b14',
+              850: '#0b1120',
+              800: '#0f172a',
+              700: '#1e293b',
+              neonBlue: '#00f0ff',
+              neonGreen: '#10b981',
+              neonAmber: '#f59e0b',
+              neonRed: '#ef4444',
+              neonPurple: '#a855f7',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          },
+          animation: {
+            'scanline': 'scanline 4s linear infinite',
+          },
+          keyframes: {
+            scanline: {
+              '0%': { transform: 'translateY(-100%)' },
+              '100%': { transform: 'translateY(1000%)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons & QR Code Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    body {
+      background-color: #070b14;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-glow {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.12);
+    }
+    .red-alert-glow {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.35);
+      animation: pulse-border 2s infinite;
+    }
+    @keyframes pulse-border {
+      0%, 100% { border-color: rgba(239, 68, 68, 0.8); box-shadow: 0 0 25px rgba(239, 68, 68, 0.4); }
+      50% { border-color: rgba(239, 68, 68, 0.3); box-shadow: 0 0 8px rgba(239, 68, 68, 0.15); }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b1120; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="sticky top-0 z-50 bg-[#070b14]/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('FACULTY')">
+        <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 via-sky-500 to-indigo-600 p-[1px] shadow-lg shadow-cyan-500/20">
+          <div class="w-full h-full bg-[#0b1120] rounded-[11px] flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-6 h-6 text-cyan-400"></i>
+          </div>
+          <span class="absolute -top-1 -right-1 flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+          </span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
+              NIR-OmniVerify <span class="text-xs px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono border border-cyan-500/30">AI 2.0</span>
+            </h1>
+            <span class="hidden sm:inline-flex items-center gap-1 text-[11px] text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-500/30 font-medium">
+              <i data-lucide="lock" class="w-3 h-3"></i> 12h Ephemeral TTL
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400">Multi-Factor Touchless Single-Camera Attendance & Monitoring</p>
+        </div>
+      </div>
+
+      <!-- Role Nav Tabs -->
+      <nav class="flex items-center p-1 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-medium">
+        <button id="nav-faculty" onclick="switchView('FACULTY')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/25 transition-all">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+          <span>Faculty</span>
+        </button>
+
+        <button id="nav-student" onclick="switchView('STUDENT')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all">
+          <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+          <span>Student</span>
+        </button>
+
+        <button id="nav-admin" onclick="switchView('ADMIN')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>Admin</span>
+        </button>
+
+        <button id="nav-camera" onclick="switchView('CAMERA_STATION')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/30 transition-all">
+          <i data-lucide="camera" class="w-4 h-4"></i>
+          <span>AI Camera & Video Hub</span>
+        </button>
+
+        <button id="nav-moodboard" onclick="switchView('MOODBOARD')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-amber-400 hover:text-amber-300 hover:bg-amber-950/30 transition-all">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <span>Scope & Mood Board</span>
+        </button>
+
+        <button id="nav-mobile" onclick="switchView('MOBILE_CONNECT')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-purple-400 hover:text-purple-300 hover:bg-purple-950/30 transition-all">
+          <i data-lucide="smartphone" class="w-4 h-4"></i>
+          <span>Phone Connect</span>
+        </button>
+      </nav>
+
+      <!-- Right Action Strip: Speed Multiplier & Micro-UPS Offline Simulation -->
+      <div class="flex items-center gap-2">
+        <div class="flex items-center bg-slate-900/90 border border-slate-800 rounded-lg p-0.5 text-[11px] font-mono">
+          <span class="px-2 text-slate-400 flex items-center gap-1 hidden md:flex">
+            <i data-lucide="fast-forward" class="w-3 h-3 text-cyan-400"></i> Speed:
+          </span>
+          <button id="spd-1" onclick="setSessionSpeed(1)" class="px-2 py-1 rounded bg-cyan-500 text-slate-950 font-bold transition-colors">1x</button>
+          <button id="spd-10" onclick="setSessionSpeed(10)" class="px-2 py-1 rounded text-slate-400 hover:text-white transition-colors">10x</button>
+          <button id="spd-60" onclick="setSessionSpeed(60)" class="px-2 py-1 rounded text-slate-400 hover:text-white transition-colors">60x Turbo</button>
+        </div>
+
+        <button id="btn-toggle-offline" onclick="toggleOfflineMode()" title="Toggle AC Mains vs Micro-UPS Battery with Offline SQLite Buffering" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-mono transition-all bg-slate-900/90 border-slate-800 text-slate-300 hover:border-slate-700">
+          <i id="icon-battery" data-lucide="battery-charging" class="w-4 h-4 text-emerald-400"></i>
+          <span id="label-ups" class="hidden lg:inline">UPS: 100% (AC Mains)</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-1 w-full">
+    
+    <!-- 1. FACULTY VIEW -->
+    <div id="view-faculty" class="space-y-6 pb-12">
+      <!-- Session Card -->
+      <div class="glass-panel rounded-2xl p-6 relative overflow-hidden border border-cyan-500/20">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span id="fac-course-code" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">CS401</span>
+              <span id="fac-room-id" class="text-xs text-slate-400">Hall 304 (Single NIR AI Mount)</span>
+              <span class="flex items-center gap-1 text-xs text-emerald-400 font-mono bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                <i data-lucide="radio" class="w-3 h-3 animate-pulse"></i> Single AI Camera Live
+              </span>
+            </div>
+            <h2 id="fac-course-name" class="text-2xl font-bold text-white tracking-tight">AI & Neural Systems</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Faculty: <span id="fac-faculty-name" class="text-slate-200 font-medium">Dr. Victor Vance</span> • 45-Minute Continuous AI Verification Policy</p>
+          </div>
+
+          <!-- 45-Min Threshold Progress -->
+          <div class="w-full lg:w-96 bg-slate-900/80 rounded-xl p-3 border border-slate-800">
+            <div class="flex items-center justify-between text-xs mb-1.5 font-mono">
+              <span class="text-slate-400 flex items-center gap-1">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-cyan-400"></i>
+                Dwell Elapsed: <strong id="fac-elapsed-text" class="text-white">0.0m</strong> / 45m
+              </span>
+              <span id="fac-pct-text" class="text-cyan-400 font-bold">0% Complete</span>
+            </div>
+            <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden flex border border-slate-800">
+              <div id="fac-progress-bar" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+              <span class="text-rose-400">&lt; 30m: Absent</span>
+              <span class="text-amber-400">30–44m: Review Flag</span>
+              <span class="text-emerald-400 font-semibold">≥ 45m: Present</span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="tapNfcPass('FAC001', 'NFC-FAC-9901', true)" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white text-xs font-semibold hover:from-indigo-500 hover:to-cyan-500 shadow-md shadow-indigo-600/30 flex items-center gap-1.5 transition-all">
+              <i data-lucide="sparkles" class="w-4 h-4 text-cyan-200"></i>
+              <span>Tap Faculty NFC Key</span>
+            </button>
+            <button id="btn-fac-play" onclick="toggleSessionState()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all">
+              <i data-lucide="pause" class="w-4 h-4"></i> Pause
+            </button>
+            <button onclick="resetSession()" title="Reset session counter" class="p-2 rounded-xl bg-slate-800/80 text-slate-400 hover:text-white text-xs border border-slate-700 transition-all">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Metrics -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-5 pt-5 border-t border-slate-800/70 text-xs">
+          <div class="bg-slate-900/60 rounded-xl p-3 border border-slate-800">
+            <div class="text-[11px] text-slate-400 uppercase font-mono">Enrolled</div>
+            <div id="stat-total-students" class="text-xl font-bold text-white mt-0.5">10 Students</div>
+          </div>
+          <div class="bg-emerald-950/20 rounded-xl p-3 border border-emerald-500/20">
+            <div class="text-[11px] text-emerald-400 uppercase font-mono">Verified (≥45m)</div>
+            <div id="stat-present-count" class="text-xl font-bold text-emerald-300 mt-0.5">0 Verified</div>
+          </div>
+          <div class="bg-amber-950/20 rounded-xl p-3 border border-amber-500/20">
+            <div class="text-[11px] text-amber-400 uppercase font-mono">Review (30-44m)</div>
+            <div id="stat-review-count" class="text-xl font-bold text-amber-300 mt-0.5">0 Exceptions</div>
+          </div>
+          <div class="bg-rose-950/20 rounded-xl p-3 border border-rose-500/20">
+            <div class="text-[11px] text-rose-400 uppercase font-mono">Absent (&lt;30m)</div>
+            <div id="stat-absent-count" class="text-xl font-bold text-rose-300 mt-0.5">0 Deficit</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real-Time Mood, Attention & Engagement Card -->
+      <div class="glass-panel rounded-2xl p-5 border border-cyan-500/30 bg-gradient-to-r from-slate-950/80 via-slate-900/90 to-slate-950/80">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-3 border-b border-slate-800">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                AI COGNITIVE INFERENCE
+              </span>
+              <h3 class="text-sm font-bold text-white">Continuous Classroom Mood & Engagement Analytics</h3>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Real-time facial expression and head pose attention index tracked over the 45-minute lecture.</p>
+          </div>
+          <div class="flex items-center gap-3 font-mono text-xs">
+            <div class="text-right">
+              <span class="text-slate-400 text-[10px] block">Overall Engagement Index</span>
+              <strong id="metric-engagement-index" class="text-base text-cyan-300">91.2% Active</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-xs font-mono">
+          <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Attentive & Focused</div>
+            <div id="mood-attentive-val" class="text-lg font-bold text-white mt-1">65%</div>
+            <div class="w-full h-1 bg-slate-950 rounded-full mt-1.5 overflow-hidden"><div id="mood-attentive-bar" class="h-full bg-emerald-500" style="width: 65%"></div></div>
+          </div>
+
+          <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-cyan-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> Active Note Taking</div>
+            <div id="mood-notes-val" class="text-lg font-bold text-white mt-1">22%</div>
+            <div class="w-full h-1 bg-slate-950 rounded-full mt-1.5 overflow-hidden"><div id="mood-notes-bar" class="h-full bg-cyan-500" style="width: 22%"></div></div>
+          </div>
+
+          <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-amber-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Questioning / Confused</div>
+            <div id="mood-confused-val" class="text-lg font-bold text-white mt-1">8%</div>
+            <div class="w-full h-1 bg-slate-950 rounded-full mt-1.5 overflow-hidden"><div id="mood-confused-bar" class="h-full bg-amber-500" style="width: 8%"></div></div>
+          </div>
+
+          <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+            <div class="text-[10px] text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-400"></span> Drowsy / Inattentive</div>
+            <div id="mood-drowsy-val" class="text-lg font-bold text-white mt-1">5%</div>
+            <div class="w-full h-1 bg-slate-950 rounded-full mt-1.5 overflow-hidden"><div id="mood-drowsy-bar" class="h-full bg-rose-500" style="width: 5%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subtabs: Grid / Exceptions / CE Grades -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <button id="tab-btn-grid" onclick="switchFacultyTab('GRID')" class="px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+            Live Classroom Attendance Grid
+          </button>
+          <button id="tab-btn-exc" onclick="switchFacultyTab('EXCEPTIONS')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-1.5">
+            <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>Exception Review Queue (12h TTL)</span>
+            <span id="badge-exc-count" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500 text-slate-950 font-bold hidden">0</span>
+          </button>
+          <button id="tab-btn-ce" onclick="switchFacultyTab('CE_GRADES')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800">
+            Continuous Evaluation (CE) Gradebook
+          </button>
+        </div>
+        <button onclick="switchView('CAMERA_STATION')" class="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-mono">
+          <span>Open Live AI Camera Hub</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <!-- Live Classroom Grid Container -->
+      <div id="container-classroom-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <!-- Dynamically rendered student cards -->
+      </div>
+
+      <!-- Exception Queue Container -->
+      <div id="container-exceptions-queue" class="hidden space-y-4">
+        <div class="glass-panel p-4 rounded-xl border border-amber-500/30 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <i data-lucide="shield-alert" class="w-6 h-6 text-amber-400"></i>
+            <div>
+              <h4 class="text-sm font-bold text-white">12-Hour Ephemeral Zero-Retention Queue</h4>
+              <p class="text-xs text-slate-400">Captured exception frames are temporary and permanently auto-erased upon review or at the 12-hour TTL expiration.</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono text-emerald-400 bg-emerald-950/50 px-2.5 py-1 rounded-lg border border-emerald-500/30">Zero-Retention Policy Active</span>
+        </div>
+        <div id="list-exceptions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dynamically rendered exceptions -->
+        </div>
+      </div>
+
+      <!-- CE Gradebook Container -->
+      <div id="container-ce-gradebook" class="hidden glass-panel rounded-xl overflow-hidden border border-slate-800">
+        <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-white">Continuous Evaluation (CE) Gradebook</h3>
+            <p class="text-xs text-slate-400">Weighted: 30% Assignment + 30% Quiz + 40% Capstone AI Project.</p>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900/90 text-slate-400 uppercase font-mono border-b border-slate-800">
+              <tr>
+                <th class="px-4 py-3">Student</th>
+                <th class="px-4 py-3">Roll No</th>
+                <th class="px-4 py-3">Attendance %</th>
+                <th class="px-4 py-3">Assignment (30%)</th>
+                <th class="px-4 py-3">Quiz (30%)</th>
+                <th class="px-4 py-3">Project (40%)</th>
+                <th class="px-4 py-3">Weighted CE Total</th>
+                <th class="px-4 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="table-ce-body" class="divide-y divide-slate-800 font-mono">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. STUDENT VIEW -->
+    <div id="view-student" class="hidden space-y-6 pb-12">
+      <!-- Profile Header & Switcher -->
+      <div class="glass-panel p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4 border border-slate-800">
+        <div class="flex items-center gap-3">
+          <div id="stu-avatar" class="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-slate-950 text-base shadow-lg bg-cyan-400">AM</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 id="stu-name" class="text-lg font-bold text-white">Alex Mercer</h2>
+              <span id="stu-roll" class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-cyan-300 border border-slate-700">2026-CS-01</span>
+            </div>
+            <p class="text-xs text-slate-400">Class: <span id="stu-class" class="text-slate-200">CS401</span> • NFC UID: <span id="stu-nfc-uid" class="font-mono text-cyan-400">NFC-7A39B1</span></p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label class="text-xs text-slate-400 font-medium">Select Student Profile:</label>
+          <select id="select-student-profile" onchange="changeSelectedStudent(this.value)" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-cyan-500 font-medium">
+            <!-- Dynamically populated options -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Strict Absence Warning Banner (Triggered when < 75%) -->
+      <div id="banner-low-attendance" class="hidden red-alert-glow rounded-2xl p-5 border border-rose-500 relative overflow-hidden">
+        <div class="flex items-start gap-4">
+          <div class="p-3 bg-rose-500/20 text-rose-400 rounded-xl border border-rose-500/40">
+            <i data-lucide="alert-octagon" class="w-8 h-8 animate-pulse"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <h3 id="alert-title-text" class="text-base font-bold text-rose-300">
+                CRITICAL ABSENCE WARNING: Attendance Below 75% Threshold (<span id="alert-pct-val">66.7</span>%)
+              </h3>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-600 text-white animate-pulse">DEBARMENT RISK</span>
+            </div>
+            <p class="text-xs text-rose-200/90 mt-1 leading-relaxed">
+              University academic regulations require a minimum of <strong>75% continuous AI-verified classroom presence</strong>. Your current standing is below threshold. You must attend the next 3 consecutive sessions with full 45-minute continuous dwell time to restore eligible standing for end-semester examinations.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="banner-good-standing" class="glass-panel rounded-2xl p-4 border border-emerald-500/30 bg-emerald-950/10 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30">
+            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-emerald-300">Good Academic Standing (Eligible)</h4>
+            <p class="text-[11px] text-slate-400">Attendance requirement satisfied (≥75%). You are eligible for end-semester examinations.</p>
+          </div>
+        </div>
+        <span id="badge-stu-pct" class="text-xs font-mono font-bold text-emerald-400 px-3 py-1 bg-emerald-950/60 rounded-lg border border-emerald-500/30">95.8% Satisfied</span>
+      </div>
+
+      <!-- Analytics & Digital NFC Pass -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 glass-panel rounded-2xl p-6 border border-slate-800 flex flex-col justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i data-lucide="award" class="w-4 h-4 text-cyan-400"></i>
+              <span>Biometric Attendance Analytics & Continuous Evaluation</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Verified continuously via single ceiling NIR camera & doorway NFC scanner.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5 font-mono">
+              <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800 text-center">
+                <div class="text-[11px] text-slate-400 uppercase">Attendance Rate</div>
+                <div id="metric-stu-pct" class="text-3xl font-black mt-1 text-cyan-400">95.8%</div>
+                <div id="metric-stu-sessions" class="text-[10px] text-slate-500 mt-1">23 Attended / 1 Missed</div>
+              </div>
+
+              <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800 text-center">
+                <div class="text-[11px] text-slate-400 uppercase">Weighted CE Score</div>
+                <div id="metric-stu-ce" class="text-3xl font-black mt-1 text-purple-400">94.2%</div>
+                <div class="text-[10px] text-slate-500 mt-1">Asg (30%) + Qz (30%) + Prj (40%)</div>
+              </div>
+
+              <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800 text-center">
+                <div class="text-[11px] text-slate-400 uppercase">NIR Periocular Score</div>
+                <div class="text-3xl font-black mt-1 text-emerald-400">99.4%</div>
+                <div class="text-[10px] text-emerald-500/80 mt-1">100% Anti-Buddy Punch</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CE Breakdown -->
+          <div class="mt-6 pt-5 border-t border-slate-800/80 space-y-3">
+            <div class="text-xs font-semibold text-slate-300">Continuous Evaluation Component Breakdown:</div>
+            <div class="space-y-2">
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 font-mono mb-1">
+                  <span>Lab Assignments (30% weight)</span>
+                  <span id="bar-asg-val" class="text-cyan-300 font-bold">94%</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-950 rounded-full overflow-hidden">
+                  <div id="bar-asg-fill" class="h-full bg-cyan-500 rounded-full" style="width: 94%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 font-mono mb-1">
+                  <span>Continuous Quizzes (30% weight)</span>
+                  <span id="bar-qz-val" class="text-purple-300 font-bold">92%</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-950 rounded-full overflow-hidden">
+                  <div id="bar-qz-fill" class="h-full bg-purple-500 rounded-full" style="width: 92%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] text-slate-400 font-mono mb-1">
+                  <span>Capstone AI Project (40% weight)</span>
+                  <span id="bar-prj-val" class="text-emerald-300 font-bold">96%</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-950 rounded-full overflow-hidden">
+                  <div id="bar-prj-fill" class="h-full bg-emerald-500 rounded-full" style="width: 96%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Virtual NFC Smart Card -->
+        <div class="glass-card-glow rounded-2xl p-6 border flex flex-col justify-between relative overflow-hidden bg-gradient-to-b from-slate-900/90 to-slate-950/90">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div class="flex items-center gap-1.5 text-xs font-mono text-cyan-400 font-semibold">
+                <i data-lucide="wifi" class="w-4 h-4 rotate-90"></i>
+                <span>NFC STUDENT PASS</span>
+              </div>
+              <span class="text-[10px] font-mono text-slate-400">UNIV-AI-2026</span>
+            </div>
+
+            <div class="mt-4 flex items-center gap-4">
+              <div id="card-stu-avatar" class="w-16 h-16 rounded-xl flex items-center justify-center font-bold text-slate-950 text-xl shadow-lg border-2 border-white/20 bg-cyan-400">AM</div>
+              <div>
+                <h4 id="card-stu-name" class="text-base font-bold text-white">Alex Mercer</h4>
+                <div id="card-stu-roll" class="text-xs font-mono text-slate-400">2026-CS-01</div>
+                <div id="card-stu-nfc" class="text-[11px] font-mono text-cyan-400 mt-0.5">UID: NFC-7A39B1</div>
+              </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-slate-950/80 rounded-xl border border-slate-800 flex items-center justify-center">
+              <div id="card-qrcode"></div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800">
+            <button id="btn-tap-stu-nfc" onclick="tapCurrentStudentNfc()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 text-slate-950 font-bold text-xs hover:from-cyan-400 hover:to-sky-500 shadow-md shadow-cyan-500/20 flex items-center justify-center gap-2 transition-all">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Tap NFC at Classroom Door</span>
+            </button>
+            <div class="text-[10px] text-center text-slate-500 mt-1.5 font-mono">Simulates doorway NFC scanner tap</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="glass-panel rounded-2xl p-6 border border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-1">
+          <i data-lucide="file-text" class="w-4 h-4 text-cyan-400"></i>
+          <span>Classroom Attendance Timeline & AI Verification Log</span>
+        </h3>
+        <p class="text-xs text-slate-400 mb-4">Each session requires ≥45 continuous minutes detected by ceiling NIR periocular tracking camera.</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900/90 text-slate-400 uppercase font-mono border-b border-slate-800">
+              <tr>
+                <th class="px-4 py-3">Course & Subject</th>
+                <th class="px-4 py-3">Date & Time</th>
+                <th class="px-4 py-3">NFC 2FA Tap</th>
+                <th class="px-4 py-3">AI NIR Dwell Time</th>
+                <th class="px-4 py-3">Verification Method</th>
+                <th class="px-4 py-3 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody id="table-timeline-body" class="divide-y divide-slate-800 font-mono">
+              <!-- Timeline rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. ADMIN VIEW -->
+    <div id="view-admin" class="hidden space-y-6 pb-12">
+      <!-- Master System Health Header -->
+      <div class="glass-panel p-6 rounded-2xl border border-slate-800">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">CLASSROOM EDGE NODE #304</span>
+              <span class="text-xs text-slate-400">Offline-First SQLite Architecture</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white tracking-tight">Classroom Edge Hardware & Privacy Infrastructure</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Supervising Single NIR Periocular Tracking Camera, Doorway NFC Receivers, and Ephemeral 12-Hour Purge Daemons.</p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="toggleOfflineMode()" class="px-4 py-2.5 rounded-xl border text-xs font-mono font-bold flex items-center gap-2 bg-slate-900 text-slate-200 border-slate-700 hover:border-slate-500 transition-all shadow-md">
+              <i data-lucide="battery-warning" class="w-4 h-4 text-amber-400"></i>
+              <span id="btn-admin-power-text">Simulate Power / Wi-Fi Outage</span>
+            </button>
+
+            <button onclick="purgeBiometricsNow()" class="px-4 py-2.5 rounded-xl bg-rose-950/40 text-rose-300 border border-rose-500/40 hover:bg-rose-900/40 text-xs font-mono font-bold flex items-center gap-2 transition-all">
+              <i data-lucide="trash-2" class="w-4 h-4 text-rose-400"></i>
+              <span>Purge Volatile Biometrics</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Telemetry 4-Pack -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          <div class="bg-slate-900/70 rounded-xl p-4 border border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-slate-400 uppercase font-mono">Single NIR Array</span>
+              <span class="flex h-2.5 w-2.5 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+            </div>
+            <div class="text-xl font-bold text-white mt-1">30.0 FPS <span class="text-xs text-emerald-400 font-mono font-normal">(Active)</span></div>
+            <div class="text-[11px] text-slate-400 mt-2 font-mono">Single Mount: 850nm Periocular</div>
+          </div>
+
+          <div class="bg-slate-900/70 rounded-xl p-4 border border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-slate-400 uppercase font-mono">Micro-UPS Backup</span>
+              <i id="admin-icon-ups" data-lucide="battery-charging" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+            <div id="admin-val-ups" class="text-xl font-bold mt-1 font-mono text-emerald-400">100% (AC Mains)</div>
+            <div id="admin-status-ups" class="text-[11px] text-slate-400 mt-2 font-mono">Status: AC Powered & Online</div>
+          </div>
+
+          <div class="bg-slate-900/70 rounded-xl p-4 border border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-slate-400 uppercase font-mono">Edge Mini-PC</span>
+              <i data-lucide="cpu" class="w-4 h-4 text-cyan-400"></i>
+            </div>
+            <div class="text-xl font-bold text-cyan-300 mt-1 font-mono">21.8% Load <span class="text-xs text-slate-400">/ 46.5°C</span></div>
+            <div class="text-[11px] text-slate-400 mt-2 font-mono">In-Memory AI Periocular Pipeline</div>
+          </div>
+
+          <div class="bg-emerald-950/20 rounded-xl p-4 border border-emerald-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-emerald-400 uppercase font-mono">Privacy Zero-Retention</span>
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+            <div class="text-xl font-bold text-emerald-300 mt-1 font-mono">0 Bytes Retained</div>
+            <div class="text-[11px] text-emerald-500/80 mt-2 font-mono">12-Hour Auto-Erase Daemon Active</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Tabs: Hardware / Timetable / Privacy Audit -->
+      <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+        <button id="admin-tab-btn-hw" onclick="switchAdminTab('HARDWARE')" class="px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">Edge Hardware Specs</button>
+        <button id="admin-tab-btn-tt" onclick="switchAdminTab('TIMETABLE')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800">Timetable Schedule</button>
+        <button id="admin-tab-btn-audit" onclick="switchAdminTab('PRIVACY_AUDIT')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800">12-Hour Zero-Retention Privacy Audit</button>
+      </div>
+
+      <!-- Admin Tab 1: Hardware -->
+      <div id="admin-content-hw" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i data-lucide="radio" class="w-4 h-4 text-cyan-400"></i>
+            <span>Single Near-Infrared (NIR) Periocular Camera Optics</span>
+          </h3>
+          <p class="text-xs text-slate-400">Ceiling mount camera equipped with 850nm NIR filter to eliminate head occlusion, bypass lighting flicker, and recognize periocular geometry through medical masks with 100% accuracy.</p>
+          <div class="space-y-3 pt-2">
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+              <div>
+                <div class="font-semibold text-white">Classroom AI Camera (Ceiling Mount)</div>
+                <div class="text-[11px] text-slate-400 font-mono">Wavelength: 850nm • Angle: 45° Downward Coverage</div>
+              </div>
+              <span class="text-emerald-400 font-mono font-bold">ONLINE (30 FPS)</span>
+            </div>
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+              <div>
+                <div class="font-semibold text-white">Doorway NFC High-Speed Reader</div>
+                <div class="text-[11px] text-slate-400 font-mono">13.56 MHz ISO/IEC 14443A • 12ms Tap Latency</div>
+              </div>
+              <span class="text-emerald-400 font-mono font-bold">ONLINE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i data-lucide="hard-drive" class="w-4 h-4 text-cyan-400"></i>
+            <span>Offline-First SQLite & Micro-UPS Resilience</span>
+          </h3>
+          <p class="text-xs text-slate-400">The edge unit executes inferencing and timestamp logging locally. During Wi-Fi or power failure, the inline battery sustains continuous tracking.</p>
+          <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 space-y-3 text-xs font-mono">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Database Engine:</span>
+              <span class="text-cyan-300">SQLite 3 (WAL In-Memory)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Sync Status:</span>
+              <span id="admin-sync-text" class="text-emerald-400">SYNCHRONIZED (Cloud Connected)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Unsynced Transactions:</span>
+              <span id="admin-unsynced-text" class="text-white">0 Records</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Micro-UPS Runtime Reserve:</span>
+              <span class="text-emerald-400">~4.5 Hours on Outage</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Tab 2: Timetable -->
+      <div id="admin-content-tt" class="hidden glass-panel rounded-2xl overflow-hidden border border-slate-800">
+        <div class="p-4 border-b border-slate-800">
+          <h3 class="text-sm font-bold text-white">University Master Classroom Timetable</h3>
+          <p class="text-xs text-slate-400">Scheduled continuous 45-minute multi-factor attendance sessions.</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900/90 text-slate-400 uppercase font-mono border-b border-slate-800">
+              <tr>
+                <th class="px-4 py-3">Session ID</th>
+                <th class="px-4 py-3">Course</th>
+                <th class="px-4 py-3">Faculty</th>
+                <th class="px-4 py-3">Room & Hardware</th>
+                <th class="px-4 py-3">Time Window</th>
+                <th class="px-4 py-3 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody id="table-timetable-body" class="divide-y divide-slate-800 font-mono">
+              <!-- Timetable rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Admin Tab 3: Privacy Audit -->
+      <div id="admin-content-audit" class="hidden glass-panel rounded-2xl p-6 border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+              <span>Zero-Retention Ephemeral Privacy Audit Log</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Proof of automated 12-hour TTL and review purge operations. Zero raw biometric video footage is stored permanently.</p>
+          </div>
+          <span class="text-xs font-mono text-emerald-400 bg-emerald-950/60 px-3 py-1 rounded-lg border border-emerald-500/30">Compliance: 100% GDPR / FERPA</span>
+        </div>
+        <div class="overflow-x-auto mt-4">
+          <table class="w-full text-left text-xs font-mono">
+            <thead class="bg-slate-900/90 text-slate-400 uppercase border-b border-slate-800">
+              <tr>
+                <th class="px-4 py-3">Timestamp</th>
+                <th class="px-4 py-3">Purge Action</th>
+                <th class="px-4 py-3">Records Cleared</th>
+                <th class="px-4 py-3">Biometric Bytes Erased</th>
+                <th class="px-4 py-3">Remaining Biometric Retained</th>
+                <th class="px-4 py-3">Audit Verification</th>
+              </tr>
+            </thead>
+            <tbody id="table-privacy-body" class="divide-y divide-slate-800">
+              <!-- Privacy audit rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. LIVE AI CAMERA & VIDEO HUB -->
+    <div id="view-camera" class="hidden space-y-6 pb-12">
+      <!-- Header -->
+      <div class="glass-panel p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4 border border-cyan-500/20">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+              <i data-lucide="radio" class="w-3 h-3 animate-pulse"></i> SINGLE AI CAMERA HUB
+            </span>
+            <span class="text-xs text-slate-400">Classroom Live Monitoring & Video Stream Ingest</span>
+          </div>
+          <h2 class="text-xl font-bold text-white tracking-tight">AI Continuous Camera Monitoring & Door NFC Gateway</h2>
+        </div>
+
+        <!-- Camera / Video Feed Source Selector -->
+        <div class="flex flex-wrap items-center gap-2">
+          
+          <select id="select-camera-source" onchange="switchCameraSource(this.value)" class="bg-slate-900 border border-slate-700 text-cyan-300 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-cyan-500 font-mono">
+            <option value="WEBCAM">💻 Source: Laptop Webcam (Live)</option>
+            <option value="PROPOSAL_VIDEO" selected>🎬 Source: Proposal Classroom Video (Sample)</option>
+            <option value="PHONE">📱 Source: Connected Mobile Phone</option>
+          </select>
+
+          <button id="btn-toggle-nir-filter" onclick="toggleNirFilter()" class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold flex items-center gap-1.5 border bg-cyan-500/20 text-cyan-300 border-cyan-500/40">
+            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+            <span>NIR 850nm Filter ON</span>
+          </button>
+
+          <button id="btn-toggle-virtual-class" onclick="toggleVirtualClass()" class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold flex items-center gap-1.5 border bg-purple-500/20 text-purple-300 border-purple-500/40">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+            <span id="label-virtual-sim">Virtual Sim: 10 Students</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Camera Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 glass-panel rounded-2xl p-4 border border-cyan-500/30 flex flex-col justify-between relative overflow-hidden bg-slate-950">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 text-xs font-mono">
+            <div class="flex items-center gap-3">
+              <span class="flex items-center gap-1.5 text-emerald-400 font-bold">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span id="label-active-camera-title">CAM-1: CEILING MOUNT (850nm NIR)</span>
+              </span>
+              <span class="text-slate-400">30.0 FPS • ISO/NIR-Auto</span>
+            </div>
+            <div class="text-cyan-400">Periocular Angle: <strong class="text-white">45.0° Downward</strong></div>
+          </div>
+
+          <!-- Video & Canvas Element -->
+          <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden my-3 flex items-center justify-center border border-slate-800">
+            
+            <!-- Live Video Stream (Webcam or Proposal Video) -->
+            <video 
+              id="active-monitoring-video" 
+              src="/assets/proposal_video.mp4" 
+              playsinline 
+              muted 
+              autoplay 
+              loop 
+              class="absolute inset-0 w-full h-full object-cover filter grayscale contrast-125 brightness-90 hue-rotate-180"
+            ></video>
+
+            <!-- Canvas HUD -->
+            <canvas id="camera-canvas" width="640" height="360" class="absolute inset-0 w-full h-full pointer-events-none z-10"></canvas>
+            
+            <div class="absolute bottom-2 left-2 z-20 bg-slate-950/80 border border-slate-800 px-2 py-1 rounded text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              12H-TTL Ephemeral Processing (0 Bytes Retained)
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent h-12 animate-scanline pointer-events-none"></div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-slate-400 pt-2 border-t border-slate-800">
+            <div class="flex items-center gap-4">
+              <span>Periocular Confidence: <strong class="text-emerald-400">99.4%</strong></span>
+              <span>Head Occlusion: <strong class="text-cyan-400">0.0% (NIR Bypassed)</strong></span>
+            </div>
+            <div class="text-slate-300">Session Dwell Elapsed: <strong id="cam-dwell-elapsed" class="text-cyan-400">0.0 mins</strong> / 45m</div>
+          </div>
+        </div>
+
+        <!-- Doorway NFC Gateway Controls -->
+        <div class="glass-panel rounded-2xl p-5 border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div class="flex items-center gap-2">
+                <i data-lucide="wifi" class="w-4 h-4 text-cyan-400 rotate-90"></i>
+                <h3 class="text-sm font-bold text-white">Doorway NFC Scanner</h3>
+              </div>
+              <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">12ms Gateway</span>
+            </div>
+
+            <p class="text-xs text-slate-400 mt-2">Test two-factor doorway check-ins and security edge cases.</p>
+
+            <div class="mt-4 space-y-2">
+              <label class="text-[11px] font-mono text-slate-400 uppercase block">1. Tap Valid Student Pass:</label>
+              <div id="nfc-quick-students" class="grid grid-cols-2 gap-2">
+                <!-- Dynamically populated buttons -->
+              </div>
+            </div>
+
+            <div class="mt-5 p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
+              <div class="text-xs font-bold text-white flex items-center gap-1.5">
+                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>Test Security Edge Cases:</span>
+              </div>
+
+              <div>
+                <button onclick="tapProxyBuddyPunch()" class="w-full py-2 px-3 rounded-lg bg-amber-950/40 text-amber-300 border border-amber-500/40 hover:bg-amber-900/40 text-xs font-semibold flex items-center justify-between transition-all">
+                  <span>Simulate Buddy-Punch Proxy</span>
+                  <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-400"></i>
+                </button>
+                <p class="text-[10px] text-slate-500 mt-1">NFC tapped, but face does not match (creates Exception).</p>
+              </div>
+
+              <div>
+                <button onclick="tapGuestStudent()" class="w-full py-2 px-3 rounded-lg bg-rose-950/40 text-rose-300 border border-rose-500/40 hover:bg-rose-900/40 text-xs font-semibold flex items-center justify-between transition-all">
+                  <span>Simulate Unregistered Guest (202)</span>
+                  <i data-lucide="x-circle" class="w-3.5 h-3.5 text-rose-400"></i>
+                </button>
+                <p class="text-[10px] text-slate-500 mt-1">Student 202 enters CS401. Logged as Guest.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-800">
+            <button onclick="tapNfcPass('FAC001', 'NFC-FAC-9901', true)" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-indigo-600/20">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Tap Faculty NFC Session Key</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. PROJECT SCOPE & MOOD BOARD CHART SHOWCASE -->
+    <div id="view-moodboard" class="hidden space-y-6 pb-12">
+      <div class="glass-panel p-6 rounded-2xl border border-amber-500/30">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                PROJECT ARCHITECTURE & SCOPE
+              </span>
+              <span class="text-xs text-slate-400">Touchless Multi-Factor Verification System</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white tracking-tight">System Objective, Workflow & Mood Board Chart</h2>
+          </div>
+          <button onclick="openVideoPlayerModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-amber-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20">
+            <i data-lucide="play" class="w-4 h-4"></i> Play Project Proposal Video
+          </button>
+        </div>
+
+        <!-- Mood Board High-Res Image Display -->
+        <div class="mt-6 rounded-2xl overflow-hidden border border-slate-700 bg-slate-950/80 shadow-2xl relative group">
+          <img 
+            src="/assets/moodboard.png" 
+            alt="Project Scope & Architecture Mood Board Chart" 
+            class="w-full h-auto object-cover rounded-xl transition-transform duration-500 group-hover:scale-[1.01]"
+          />
+          <div class="absolute bottom-3 right-3 bg-slate-900/90 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-mono text-cyan-300 flex items-center gap-2">
+            <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+            <span>Click to View Full Resolution</span>
+          </div>
+        </div>
+
+        <!-- 6 Core Scope Blocks based on the Moodboard Chart -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <div class="text-xs font-mono text-cyan-400 font-semibold mb-1 flex items-center gap-1.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400"></i> 1. System Objective
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Eliminate proxy buddy-punching, recapture instruction time, and enforce 100% presence accuracy with strict ephemeral zero-retention data privacy.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <div class="text-xs font-mono text-emerald-400 font-semibold mb-1 flex items-center gap-1.5">
+              <i data-lucide="clock" class="w-4 h-4 text-emerald-400"></i> 2. 45-Min Threshold Workflow
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Faculty NFC start → Doorway 2FA student tap → Continuous AI camera tracking → Auto <strong>Present (≥45m)</strong>, <strong>Review (30-44m)</strong>, <strong>Absent (&lt;30m)</strong>.
+            </p>
+          </div>
+
+          <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+            <div class="text-xs font-mono text-amber-400 font-semibold mb-1 flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i> 3. 12-Hour Privacy Protocol
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Volatile RAM frame cache automatically purged upon faculty review or exact 12-hour TTL expiration. 0 bytes permanent biometric retention.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. MOBILE CONNECT VIEW -->
+    <div id="view-mobile" class="hidden max-w-4xl mx-auto space-y-6 pb-12">
+      <div class="glass-panel p-6 rounded-2xl border border-purple-500/30 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-2 text-center md:text-left">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              <i data-lucide="smartphone" class="w-3.5 h-3.5"></i> Mobile Companion & AI Stream
+            </div>
+            <h2 class="text-xl font-bold text-white tracking-tight">Connect Your Phone to Classroom AI</h2>
+            <p class="text-xs text-slate-400 max-w-md">Scan this QR code on your phone camera (on the same Wi-Fi) to stream your phone camera as a live classroom feed or tap mobile NFC student passes!</p>
+            <div class="text-xs font-mono text-cyan-300 pt-1">Direct URL: <span id="mobile-direct-url" class="underline"></span></div>
+          </div>
+
+          <div class="p-4 bg-slate-950 rounded-2xl border border-slate-800 flex flex-col items-center justify-center shadow-xl">
+            <div id="phone-connect-qrcode"></div>
+            <span class="text-[10px] font-mono text-slate-400 mt-2">Scan with Phone Camera</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div class="flex items-center gap-2">
+                <i data-lucide="camera" class="w-4 h-4 text-purple-400"></i>
+                <h3 class="text-sm font-bold text-white">Mobile Camera Stream</h3>
+              </div>
+              <span class="text-[10px] font-mono text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-500/30">Live Ingest</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Use device or phone camera as classroom AI monitoring feed.</p>
+            <div class="relative aspect-video bg-slate-950 rounded-xl overflow-hidden my-3 border border-slate-800 flex items-center justify-center">
+              <video id="phone-video" playsinline muted autoplay class="w-full h-full object-cover filter grayscale contrast-150"></video>
+            </div>
+          </div>
+          <button onclick="startPhoneCameraStream()" class="w-full py-2.5 rounded-xl bg-purple-600 text-white font-bold text-xs hover:bg-purple-500 shadow-md shadow-purple-600/20 flex items-center justify-center gap-2 transition-all">
+            <i data-lucide="camera" class="w-4 h-4"></i>
+            <span>Start Mobile Device Camera</span>
+          </button>
+        </div>
+
+        <div class="glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div class="flex items-center gap-2">
+                <i data-lucide="wifi" class="w-4 h-4 text-cyan-400 rotate-90"></i>
+                <h3 class="text-sm font-bold text-white">Mobile Phone NFC Wallet Pass</h3>
+              </div>
+              <span class="text-[10px] font-mono text-cyan-400">ISO 14443A</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Select student pass to tap from phone.</p>
+            <div class="mt-4 space-y-3">
+              <div>
+                <label class="text-xs text-slate-400 block mb-1 font-mono">Select Student Pass:</label>
+                <select id="select-phone-student" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl p-2.5 font-mono"></select>
+              </div>
+            </div>
+          </div>
+          <button onclick="tapFromPhoneWallet()" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 text-slate-950 font-bold text-xs hover:from-cyan-400 hover:to-sky-500 shadow-md shadow-cyan-500/25 flex items-center justify-center gap-2 transition-all mt-4">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Tap Phone NFC at Classroom Doorway</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- TOAST ALERTS BANNER -->
+  <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2 max-w-sm pointer-events-none"></div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800/80 py-4 px-6 bg-[#070b14]/90 text-center text-xs text-slate-500 font-mono">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <span>AI-Driven Multi-Factor Ephemeral Attendance System</span>
+      <span class="text-emerald-400 flex items-center gap-1">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> 12-Hour Volatile TTL • Zero Biometric Retention Protocol
+      </span>
+      <span>Single Camera AI Architecture • Local SQLite WAL</span>
+    </div>
+  </footer>
+
+  <!-- CLIENT-SIDE APPLICATION SCRIPT -->
+  <script>
+    let state = {
+      view: 'FACULTY',
+      facultyTab: 'GRID',
+      adminTab: 'HARDWARE',
+      session: null,
+      students: [],
+      exceptions: [],
+      telemetry: null,
+      timetable: [],
+      privacyAudits: [],
+      selectedStudentId: 'STU101',
+      isNirFilterActive: true,
+      virtualClassActive: true,
+      isWebcamActive: false,
+      cameraSource: 'PROPOSAL_VIDEO',
+      speedMultiplier: 1
+    };
+
+    const API_BASE = '/api';
+
+    function showToast(title, message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      let border = 'border-cyan-500/50 text-cyan-300';
+      let icon = 'shield-check';
+      if (type === 'success') { border = 'border-emerald-500/50 text-emerald-300'; icon = 'check-circle-2'; }
+      if (type === 'warning') { border = 'border-amber-500/50 text-amber-300'; icon = 'alert-triangle'; }
+      if (type === 'error') { border = 'border-rose-500/50 text-rose-300'; icon = 'x-circle'; }
+
+      toast.className = `p-3.5 rounded-xl border bg-slate-900/95 shadow-2xl backdrop-blur-md pointer-events-auto flex items-start gap-3 transition-all ${border}`;
+      toast.innerHTML = `
+        <i data-lucide="${icon}" class="w-5 h-5 shrink-0 mt-0.5"></i>
+        <div class="text-xs">
+          <strong class="block font-bold text-white mb-0.5">${title}</strong>
+          <span class="text-slate-300 leading-snug">${message}</span>
+        </div>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons();
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 400);
+      }, 4500);
+    }
+
+    function switchView(viewName) {
+      state.view = viewName;
+      ['faculty', 'student', 'admin', 'camera', 'moodboard', 'mobile'].forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        const nav = document.getElementById(`nav-${v}`);
+        if (el) el.classList.add('hidden');
+        if (nav) {
+          nav.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-all';
+        }
+      });
+
+      const key = viewName.toLowerCase().replace('_station', '').replace('_connect', '');
+      const activeEl = document.getElementById(`view-${key}`);
+      const activeNav = document.getElementById(`nav-${key}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+      if (activeNav) {
+        activeNav.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/25 transition-all';
+      }
+
+      if (viewName === 'CAMERA_STATION') {
+        startCanvasLoop();
+      }
+      lucide.createIcons();
+    }
+
+    function switchFacultyTab(tab) {
+      state.facultyTab = tab;
+      document.getElementById('container-classroom-grid').classList.toggle('hidden', tab !== 'GRID');
+      document.getElementById('container-exceptions-queue').classList.toggle('hidden', tab !== 'EXCEPTIONS');
+      document.getElementById('container-ce-gradebook').classList.toggle('hidden', tab !== 'CE_GRADES');
+
+      document.getElementById('tab-btn-grid').className = tab === 'GRID' ? 'px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800';
+      document.getElementById('tab-btn-exc').className = tab === 'EXCEPTIONS' ? 'px-4 py-2 rounded-xl text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5' : 'px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-1.5';
+      document.getElementById('tab-btn-ce').className = tab === 'CE_GRADES' ? 'px-4 py-2 rounded-xl text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/40' : 'px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800';
+    }
+
+    function switchAdminTab(tab) {
+      state.adminTab = tab;
+      document.getElementById('admin-content-hw').classList.toggle('hidden', tab !== 'HARDWARE');
+      document.getElementById('admin-content-tt').classList.toggle('hidden', tab !== 'TIMETABLE');
+      document.getElementById('admin-content-audit').classList.toggle('hidden', tab !== 'PRIVACY_AUDIT');
+
+      document.getElementById('admin-tab-btn-hw').className = tab === 'HARDWARE' ? 'px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800';
+      document.getElementById('admin-tab-btn-tt').className = tab === 'TIMETABLE' ? 'px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800';
+      document.getElementById('admin-tab-btn-audit').className = tab === 'PRIVACY_AUDIT' ? 'px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800';
+    }
+
+    async function loadData() {
+      try {
+        const [sessRes, excRes, telemRes, ttRes, auditRes, moodRes] = await Promise.all([
+          fetch(`${API_BASE}/session/current`).then(r => r.json()),
+          fetch(`${API_BASE}/exceptions`).then(r => r.json()),
+          fetch(`${API_BASE}/hardware`).then(r => r.json()),
+          fetch(`${API_BASE}/timetable`).then(r => r.json()),
+          fetch(`${API_BASE}/privacy/audits`).then(r => r.json()),
+          fetch(`${API_BASE}/engagement/mood-metrics`).then(r => r.json()).catch(() => null)
+        ]);
+
+        state.session = sessRes.session;
+        state.students = sessRes.students;
+        state.exceptions = excRes;
+        state.telemetry = telemRes;
+        state.timetable = ttRes;
+        state.privacyAudits = auditRes;
+
+        renderFacultyDashboard(moodRes);
+        renderStudentDashboard();
+        renderAdminDashboard();
+        renderCameraStation();
+        renderMobileView();
+        lucide.createIcons();
+      } catch (err) {
+        console.error('Data load error:', err);
+      }
+    }
+
+    function renderFacultyDashboard(mood) {
+      if (!state.session) return;
+      const s = state.session;
+      const elapsed = s.elapsed_minutes || 0;
+      const target = s.duration_minutes || 45;
+      const pct = Math.min(100, Math.round((elapsed / target) * 100));
+
+      document.getElementById('fac-course-code').innerText = s.course_code;
+      document.getElementById('fac-room-id').innerText = s.room_id;
+      document.getElementById('fac-course-name').innerText = s.course_name;
+      document.getElementById('fac-faculty-name').innerText = s.faculty_name || 'Dr. Victor Vance';
+      document.getElementById('fac-elapsed-text').innerText = `${elapsed}m`;
+      document.getElementById('fac-pct-text').innerText = `${pct}% Complete`;
+      document.getElementById('fac-progress-bar').style.width = `${pct}%`;
+      document.getElementById('cam-dwell-elapsed').innerText = `${elapsed} mins`;
+
+      const eng = mood || s.engagement || { attentivePct: 82.5, overallEngagementIndex: 91.2 };
+      document.getElementById('metric-engagement-index').innerText = `${eng.overallEngagementIndex}% Active`;
+      document.getElementById('mood-attentive-val').innerText = `${Math.round(eng.attentivePct)}%`;
+      document.getElementById('mood-attentive-bar').style.width = `${Math.round(eng.attentivePct)}%`;
+
+      const playBtn = document.getElementById('btn-fac-play');
+      if (s.status === 'ACTIVE') {
+        playBtn.innerHTML = '<i data-lucide="pause" class="w-4 h-4"></i> Pause';
+        playBtn.className = 'px-3.5 py-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all';
+      } else {
+        playBtn.innerHTML = '<i data-lucide="play" class="w-4 h-4"></i> Start';
+        playBtn.className = 'px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all';
+      }
+
+      const present = state.students.filter(st => st.final_status === 'PRESENT' || (st.dwell_minutes >= 45)).length;
+      const review = state.students.filter(st => st.final_status === 'REVIEW_REQUIRED' || (st.dwell_minutes >= 30 && st.dwell_minutes < 45)).length;
+      const absent = state.students.filter(st => st.final_status === 'ABSENT' || (st.dwell_minutes < 30 && s.status === 'COMPLETED')).length;
+
+      document.getElementById('stat-total-students').innerText = `${state.students.length} Students`;
+      document.getElementById('stat-present-count').innerText = `${present} Verified`;
+      document.getElementById('stat-review-count').innerText = `${state.exceptions.filter(e => e.status === 'PENDING').length} Exceptions`;
+      document.getElementById('stat-absent-count').innerText = `${absent} Deficit`;
+
+      const pendingExc = state.exceptions.filter(e => e.status === 'PENDING');
+      const badgeExc = document.getElementById('badge-exc-count');
+      if (pendingExc.length > 0) {
+        badgeExc.innerText = pendingExc.length;
+        badgeExc.classList.remove('hidden');
+      } else {
+        badgeExc.classList.add('hidden');
+      }
+
+      const grid = document.getElementById('container-classroom-grid');
+      grid.innerHTML = state.students.map(st => {
+        const dwell = st.dwell_minutes || Number(((st.dwell_seconds || 0) / 60).toFixed(1));
+        const dwellPct = Math.min(100, Math.round((dwell / 45) * 100));
+        const isTapped = Boolean(st.nfc_tap_time);
+
+        let badgeBg = 'bg-slate-800 text-slate-300 border-slate-700';
+        let statusText = 'Pending';
+        let barColor = 'from-slate-600 to-slate-500';
+
+        if (st.final_status === 'PRESENT' || dwell >= 45) {
+          badgeBg = 'bg-emerald-950/60 text-emerald-300 border-emerald-500/40';
+          statusText = 'Verified Present';
+          barColor = 'from-emerald-500 to-teal-400';
+        } else if (st.final_status === 'REVIEW_REQUIRED' || (dwell >= 30 && dwell < 45)) {
+          badgeBg = 'bg-amber-950/60 text-amber-300 border-amber-500/40';
+          statusText = 'Review Flag (30-44m)';
+          barColor = 'from-amber-500 to-yellow-400';
+        } else if (st.final_status === 'ABSENT') {
+          badgeBg = 'bg-rose-950/60 text-rose-300 border-rose-500/40';
+          statusText = 'Marked Absent';
+          barColor = 'from-rose-600 to-red-500';
+        }
+
+        return `
+          <div class="glass-card rounded-xl p-4 border transition-all hover:border-cyan-500/40">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-slate-950 text-sm shadow-inner" style="background-color: ${st.avatar_color || '#00f0ff'}">
+                  ${st.name.split(' ').map(n => n[0]).join('')}
+                </div>
+                <div>
+                  <h4 class="text-sm font-semibold text-white">${st.name}</h4>
+                  <div class="text-[11px] font-mono text-slate-400">${st.roll_no} • ${st.id}</div>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full border ${badgeBg}">${statusText}</span>
+            </div>
+
+            <div class="mt-3 space-y-2 text-xs">
+              <div class="flex items-center justify-between text-slate-400 font-mono">
+                <span>Door NFC 2FA:</span>
+                ${isTapped ? `<span class="text-emerald-400 font-semibold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3 h-3"></i> ${st.nfc_tap_time}</span>` : `<span class="text-slate-500">Not Tapped</span>`}
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between text-slate-300 font-mono text-[11px] mb-1">
+                  <span>AI Camera Dwell:</span>
+                  <strong class="text-cyan-300">${dwell}m / 45m (${dwellPct}%)</strong>
+                </div>
+                <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                  <div class="h-full bg-gradient-to-r ${barColor} transition-all duration-300" style="width: ${dwellPct}%"></div>
+                </div>
+              </div>
+
+              ${st.flagged_reason ? `<div class="p-1.5 rounded-lg bg-amber-950/30 border border-amber-500/20 text-[10px] text-amber-300">⚠️ ${st.flagged_reason}</div>` : ''}
+            </div>
+
+            <div class="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+              <span class="text-slate-400 font-mono">CE: ${st.ce_assignment_score || 85}%</span>
+              <button onclick="tapNfcPass('${st.id}', '${st.nfc_uid}')" class="text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1">
+                <span>Simulate NFC</span>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const excContainer = document.getElementById('list-exceptions');
+      excContainer.innerHTML = state.exceptions.map(exc => {
+        const isPending = exc.status === 'PENDING';
+        const ttlHours = Math.floor((exc.ttl_remaining_minutes || 720) / 60);
+        const ttlMins = (exc.ttl_remaining_minutes || 720) % 60;
+
+        return `
+          <div class="rounded-xl p-5 border ${isPending ? 'bg-slate-900/90 border-amber-500/40 shadow-lg' : 'bg-slate-950/60 border-slate-800 opacity-60'}">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  ${exc.exception_type.replace(/_/g, ' ')}
+                </span>
+                <h4 class="text-base font-bold text-white mt-1">${exc.student_name}</h4>
+              </div>
+              <div class="text-right font-mono">
+                <span class="text-[10px] text-slate-400 block">TTL Countdown</span>
+                <span class="text-xs text-amber-400 font-semibold flex items-center gap-1 justify-end">
+                  <i data-lucide="clock" class="w-3 h-3"></i> ${ttlHours}h ${ttlMins}m left
+                </span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-300 mt-2 bg-slate-950/70 p-2.5 rounded-lg border border-slate-800">${exc.description}</p>
+            
+            <div class="mt-3 flex items-center gap-3 p-2.5 rounded-lg bg-slate-950/50 border border-slate-800/80">
+              <div class="w-10 h-10 rounded bg-slate-800 flex items-center justify-center text-cyan-400">
+                <i data-lucide="eye" class="w-5 h-5"></i>
+              </div>
+              <div class="text-[11px] text-slate-400 font-mono">
+                <div>Volatile Token: <span class="text-cyan-300">NIR_PERIOCULAR_TMP_${exc.id}</span></div>
+                <div class="text-[10px] text-slate-500">Auto-erases instantly upon review action</div>
+              </div>
+            </div>
+
+            ${isPending ? `
+              <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-end gap-2">
+                <button onclick="reviewException('${exc.id}', 'REJECT_ABSENT')" class="px-3 py-1.5 rounded-lg bg-rose-950/40 text-rose-300 border border-rose-500/30 hover:bg-rose-900/50 text-xs font-semibold flex items-center gap-1">
+                  <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Reject (Mark Absent)
+                </button>
+                <button onclick="reviewException('${exc.id}', 'APPROVE_PRESENT')" class="px-3.5 py-1.5 rounded-lg bg-emerald-500 text-slate-950 hover:bg-emerald-400 text-xs font-bold flex items-center gap-1 shadow-md shadow-emerald-500/20">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Approve as Present
+                </button>
+              </div>
+            ` : `
+              <div class="mt-3 text-right text-xs font-mono text-slate-400">
+                Status: <strong class="text-emerald-400">${exc.status}</strong> • Biometric frame purged.
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+
+      const ceBody = document.getElementById('table-ce-body');
+      ceBody.innerHTML = state.students.map(st => {
+        const asg = st.ce_assignment_score || 85;
+        const qz = st.ce_quiz_score || 85;
+        const prj = st.ce_project_score || 85;
+        const total = (asg * 0.3 + qz * 0.3 + prj * 0.4).toFixed(1);
+        const isLow = st.current_attendance_pct < 75;
+
+        return `
+          <tr class="hover:bg-slate-900/50">
+            <td class="px-4 py-3 font-sans font-medium text-white flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-slate-950 font-bold" style="background-color: ${st.avatar_color || '#00f0ff'}">${st.name[0]}</div>
+              <span>${st.name}</span>
+            </td>
+            <td class="px-4 py-3 text-slate-400">${st.roll_no}</td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${isLow ? 'bg-rose-950/60 text-rose-400 border border-rose-500/30' : 'text-emerald-400'}">
+                ${st.current_attendance_pct}% ${isLow ? '⚠️ Low' : ''}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-slate-200">${asg}</td>
+            <td class="px-4 py-3 text-slate-200">${qz}</td>
+            <td class="px-4 py-3 text-slate-200">${prj}</td>
+            <td class="px-4 py-3 font-bold text-cyan-300">${total}%</td>
+            <td class="px-4 py-3 text-right">
+              <button onclick="editStudentCe('${st.id}')" class="text-slate-400 hover:text-cyan-300 p-1">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderStudentDashboard() {
+      const studentSelect = document.getElementById('select-student-profile');
+      if (studentSelect.options.length === 0) {
+        studentSelect.innerHTML = state.students.map(s => `
+          <option value="${s.id}" ${s.id === state.selectedStudentId ? 'selected' : ''}>
+            ${s.name} (${s.roll_no}) ${s.current_attendance_pct < 75 ? '⚠️ <75%' : ''}
+          </option>
+        `).join('');
+      }
+
+      const st = state.students.find(s => s.id === state.selectedStudentId) || state.students[0];
+      if (!st) return;
+
+      const isLow = st.current_attendance_pct < 75.0;
+
+      document.getElementById('stu-avatar').innerText = st.name.split(' ').map(n => n[0]).join('');
+      document.getElementById('stu-avatar').style.backgroundColor = st.avatar_color || '#00f0ff';
+      document.getElementById('stu-name').innerText = st.name;
+      document.getElementById('stu-roll').innerText = st.roll_no;
+      document.getElementById('stu-class').innerText = st.class_id;
+      document.getElementById('stu-nfc-uid').innerText = st.nfc_uid;
+
+      document.getElementById('banner-low-attendance').classList.toggle('hidden', !isLow);
+      document.getElementById('banner-good-standing').classList.toggle('hidden', isLow);
+      if (isLow) {
+        document.getElementById('alert-pct-val').innerText = st.current_attendance_pct;
+      }
+      document.getElementById('badge-stu-pct').innerText = `${st.current_attendance_pct}% Satisfied`;
+      document.getElementById('metric-stu-pct').innerText = `${st.current_attendance_pct}%`;
+      document.getElementById('metric-stu-pct').className = `text-3xl font-black mt-1 font-mono ${isLow ? 'text-rose-400 animate-pulse' : 'text-cyan-400'}`;
+
+      const attended = st.attended_sessions || 23;
+      const total = st.total_sessions || 24;
+      document.getElementById('metric-stu-sessions').innerText = `${attended} Attended / ${total - attended} Missed`;
+
+      const ceTotal = ((st.ce_assignment_score * 0.3) + (st.ce_quiz_score * 0.3) + (st.ce_project_score * 0.4)).toFixed(1);
+      document.getElementById('metric-stu-ce').innerText = `${ceTotal}%`;
+
+      document.getElementById('bar-asg-val').innerText = `${st.ce_assignment_score}%`;
+      document.getElementById('bar-asg-fill').style.width = `${st.ce_assignment_score}%`;
+      document.getElementById('bar-qz-val').innerText = `${st.ce_quiz_score}%`;
+      document.getElementById('bar-qz-fill').style.width = `${st.ce_quiz_score}%`;
+      document.getElementById('bar-prj-val').innerText = `${st.ce_project_score}%`;
+      document.getElementById('bar-prj-fill').style.width = `${st.ce_project_score}%`;
+
+      document.getElementById('card-stu-avatar').innerText = st.name.split(' ').map(n => n[0]).join('');
+      document.getElementById('card-stu-avatar').style.backgroundColor = st.avatar_color || '#00f0ff';
+      document.getElementById('card-stu-name').innerText = st.name;
+      document.getElementById('card-stu-roll').innerText = st.roll_no;
+      document.getElementById('card-stu-nfc').innerText = `UID: ${st.nfc_uid}`;
+
+      const qrContainer = document.getElementById('card-qrcode');
+      qrContainer.innerHTML = '';
+      new QRCode(qrContainer, {
+        text: `AI_ATTENDANCE:${st.id}:${st.nfc_uid}`,
+        width: 80,
+        height: 80,
+        colorDark: "#00f0ff",
+        colorLight: "transparent"
+      });
+
+      const timelineBody = document.getElementById('table-timeline-body');
+      timelineBody.innerHTML = `
+        <tr class="hover:bg-slate-900/50">
+          <td class="px-4 py-3 font-sans font-medium text-white">CS401: AI & Neural Systems</td>
+          <td class="px-4 py-3 text-slate-400">Today, 10:00 AM</td>
+          <td class="px-4 py-3 text-emerald-400 flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 10:01:14 AM</td>
+          <td class="px-4 py-3 text-cyan-300 font-bold">${st.dwell_minutes || 45.8} mins</td>
+          <td class="px-4 py-3 text-slate-400 text-[11px]">NFC + Single NIR Periocular</td>
+          <td class="px-4 py-3 text-right"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-950/70 text-emerald-300 border border-emerald-500/30">PRESENT</span></td>
+        </tr>
+      `;
+    }
+
+    function changeSelectedStudent(id) {
+      state.selectedStudentId = id;
+      renderStudentDashboard();
+      lucide.createIcons();
+    }
+
+    function renderAdminDashboard() {
+      const isOff = state.telemetry?.offline_sync_mode === 'OFFLINE_BUFFERING';
+      const upsVal = document.getElementById('admin-val-ups');
+      const upsStatus = document.getElementById('admin-status-ups');
+      const syncText = document.getElementById('admin-sync-text');
+      const unsyncedText = document.getElementById('admin-unsynced-text');
+      const btnPowerText = document.getElementById('btn-admin-power-text');
+
+      if (isOff) {
+        upsVal.innerText = '94% (Battery)';
+        upsVal.className = 'text-xl font-bold mt-1 font-mono text-amber-400';
+        upsStatus.innerText = 'Status: Offline SQLite Buffer Active';
+        syncText.innerText = 'BUFFERING LOCALLY (0 Cloud Dep)';
+        syncText.className = 'text-amber-400 font-bold';
+        unsyncedText.innerText = `${state.telemetry?.unsynced_offline_records || 1} Records`;
+        btnPowerText.innerText = 'Restore AC Power & Cloud Sync';
+        document.getElementById('label-ups').innerText = 'UPS: 94% (SQLite Buffer)';
+      } else {
+        upsVal.innerText = '100% (AC Mains)';
+        upsVal.className = 'text-xl font-bold mt-1 font-mono text-emerald-400';
+        upsStatus.innerText = 'Status: AC Powered & Online';
+        syncText.innerText = 'SYNCHRONIZED (Cloud Connected)';
+        syncText.className = 'text-emerald-400 font-bold';
+        unsyncedText.innerText = '0 Records';
+        btnPowerText.innerText = 'Simulate Power / Wi-Fi Outage';
+        document.getElementById('label-ups').innerText = 'UPS: 100% (AC Mains)';
+      }
+
+      const ttBody = document.getElementById('table-timetable-body');
+      ttBody.innerHTML = state.timetable.map(t => `
+        <tr class="hover:bg-slate-900/50">
+          <td class="px-4 py-3 text-cyan-300 font-bold">${t.id}</td>
+          <td class="px-4 py-3 font-sans text-white font-medium">${t.course_code}: ${t.course_name}</td>
+          <td class="px-4 py-3 text-slate-300">${t.faculty_name || 'Dr. Victor Vance'}</td>
+          <td class="px-4 py-3 text-slate-400">${t.room_id}</td>
+          <td class="px-4 py-3 text-slate-400">${t.start_time} - ${t.end_time} (45m)</td>
+          <td class="px-4 py-3 text-right">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${t.status === 'ACTIVE' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/30 animate-pulse' : 'bg-slate-800 text-slate-400'}">${t.status}</span>
+          </td>
+        </tr>
+      `).join('');
+
+      const privacyBody = document.getElementById('table-privacy-body');
+      privacyBody.innerHTML = state.privacyAudits.map(a => `
+        <tr class="hover:bg-slate-900/50">
+          <td class="px-4 py-3 text-slate-400">${new Date(a.timestamp).toLocaleString()}</td>
+          <td class="px-4 py-3 text-cyan-300 font-semibold">${a.action_type}</td>
+          <td class="px-4 py-3 text-white">${a.records_purged_count} Frames</td>
+          <td class="px-4 py-3 text-emerald-400 font-bold">${(a.biometric_bytes_erased / 1000).toFixed(0)} KB Wiped</td>
+          <td class="px-4 py-3 text-emerald-300 font-bold">0 Bytes (Zero Retention)</td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-emerald-950/70 text-emerald-300 border border-emerald-500/30 text-[10px]">${a.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderCameraStation() {
+      const quickContainer = document.getElementById('nfc-quick-students');
+      quickContainer.innerHTML = state.students.slice(0, 4).map(s => `
+        <button onclick="tapNfcPass('${s.id}', '${s.nfc_uid}')" class="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 text-left transition-all">
+          <div class="text-xs font-semibold text-slate-200">${s.name.split(' ')[0]} (${s.roll_no.split('-')[2]})</div>
+          <div class="text-[10px] font-mono text-slate-500">${s.nfc_uid}</div>
+        </button>
+      `).join('');
+    }
+
+    function renderMobileView() {
+      const url = `${window.location.protocol}//${window.location.host}`;
+      document.getElementById('mobile-direct-url').innerText = url;
+
+      const qrContainer = document.getElementById('phone-connect-qrcode');
+      qrContainer.innerHTML = '';
+      new QRCode(qrContainer, {
+        text: url,
+        width: 120,
+        height: 120,
+        colorDark: "#a855f7",
+        colorLight: "transparent"
+      });
+
+      const selPhone = document.getElementById('select-phone-student');
+      if (selPhone.options.length === 0) {
+        selPhone.innerHTML = state.students.map(s => `
+          <option value="${s.id}">${s.name} (${s.roll_no}) - ${s.nfc_uid}</option>
+        `).join('');
+      }
+    }
+
+    // Camera & Video Stream Switcher
+    async function switchCameraSource(source) {
+      state.cameraSource = source;
+      const video = document.getElementById('active-monitoring-video');
+      const title = document.getElementById('label-active-camera-title');
+
+      if (source === 'PROPOSAL_VIDEO') {
+        video.srcObject = null;
+        video.src = '/assets/proposal_video.mp4';
+        video.play();
+        title.innerText = 'CAM-1: PROPOSAL CLASSROOM VIDEO INGEST';
+        showToast('Source Switched', 'Ingesting Project Proposal classroom video stream', 'info');
+      } else if (source === 'WEBCAM') {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+          video.src = '';
+          video.srcObject = stream;
+          video.play();
+          title.innerText = 'CAM-1: LAPTOP LIVE WEBCAM';
+          showToast('Source Switched', 'Live Laptop Webcam Active', 'success');
+        } catch (e) {
+          showToast('Camera Permission', 'Webcam not accessible, playing proposal video', 'warning');
+          switchCameraSource('PROPOSAL_VIDEO');
+        }
+      } else if (source === 'PHONE') {
+        switchView('MOBILE_CONNECT');
+      }
+    }
+
+    function toggleNirFilter() {
+      state.isNirFilterActive = !state.isNirFilterActive;
+      const video = document.getElementById('active-monitoring-video');
+      if (state.isNirFilterActive) {
+        video.className = 'absolute inset-0 w-full h-full object-cover filter grayscale contrast-125 brightness-90 hue-rotate-180';
+        document.getElementById('btn-toggle-nir-filter').innerHTML = '<i data-lucide="eye" class="w-3.5 h-3.5"></i> <span>NIR 850nm Filter ON</span>';
+      } else {
+        video.className = 'absolute inset-0 w-full h-full object-cover';
+        document.getElementById('btn-toggle-nir-filter').innerHTML = '<i data-lucide="eye" class="w-3.5 h-3.5"></i> <span>NIR Filter OFF (RGB)</span>';
+      }
+      lucide.createIcons();
+    }
+
+    function toggleVirtualClass() {
+      state.virtualClassActive = !state.virtualClassActive;
+      document.getElementById('label-virtual-sim').innerText = state.virtualClassActive ? 'Virtual Sim: 10 Students' : 'Virtual Sim: Solo Live';
+    }
+
+    function startCanvasLoop() {
+      const canvas = document.getElementById('camera-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let tick = 0;
+
+      function loop() {
+        tick++;
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        const fx = w * 0.32;
+        const fy = h * 0.22;
+        const fw = w * 0.36;
+        const fh = h * 0.52;
+
+        ctx.strokeStyle = '#00f0ff';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(fx, fy, fw, fh);
+
+        const eyeY = fy + fh * 0.35;
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(fx + fw * 0.3, eyeY, 4, 0, Math.PI * 2);
+        ctx.arc(fx + fw * 0.7, eyeY, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        const st101 = state.students.find(s => s.id === 'STU101') || state.students[0];
+        const liveDwell = st101?.dwell_minutes || 0;
+
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.fillRect(fx, fy - 26, fw, 22);
+        ctx.fillStyle = '#00f0ff';
+        ctx.font = 'bold 11px JetBrains Mono, monospace';
+        ctx.fillText(`ID: ${st101?.name || 'Alex Mercer'} (99.2% NIR)`, fx + 6, fy - 11);
+
+        ctx.fillStyle = liveDwell >= 45 ? 'rgba(16, 185, 129, 0.9)' : 'rgba(245, 158, 11, 0.9)';
+        ctx.fillRect(fx, fy + fh + 4, fw, 20);
+        ctx.fillStyle = '#070b14';
+        ctx.font = 'bold 10px JetBrains Mono, monospace';
+        ctx.fillText(`Dwell: ${liveDwell}m / 45m ${liveDwell >= 45 ? '(PRESENT)' : '(TRACKING)'}`, fx + 6, fy + fh + 18);
+
+        if (tick % 90 === 0 && state.session?.status === 'ACTIVE') {
+          const ids = ['STU101'];
+          if (state.virtualClassActive) {
+            ids.push('STU102', 'STU103', 'STU104', 'STU106', 'STU107', 'STU109', 'STU110');
+          }
+          fetch(`${API_BASE}/ai/track-dwell`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ detectedStudentIds: ids, deltaSeconds: 1.5, isLiveWebcam: state.isWebcamActive })
+          }).catch(console.warn);
+        }
+
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    }
+
+    function openVideoPlayerModal() {
+      switchView('CAMERA_STATION');
+      switchCameraSource('PROPOSAL_VIDEO');
+    }
+
+    async function startPhoneCameraStream() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        const video = document.getElementById('phone-video');
+        video.srcObject = stream;
+        video.play();
+        showToast('Phone Camera Active', 'Connected as Single Classroom Feed', 'success');
+      } catch (err) {
+        showToast('Camera Error', err.message, 'error');
+      }
+    }
+
+    async function tapNfcPass(studentId, nfcUid, isFaculty = false) {
+      const res = await fetch(`${API_BASE}/nfc/tap`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, nfcUid, isFaculty, faceConfidence: 0.98 })
+      }).then(r => r.json());
+
+      if (res.warning) {
+        showToast('Security Alert', res.message, 'warning');
+      } else {
+        showToast('Doorway NFC Event', res.message, 'success');
+      }
+      loadData();
+    }
+
+    async function tapProxyBuddyPunch() {
+      const res = await fetch(`${API_BASE}/nfc/tap`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId: 'STU105', nfcUid: 'NFC-3C88D2', isProxySimulated: true, faceConfidence: 0.42 })
+      }).then(r => r.json());
+      showToast('⚠️ Proxy Mismatch Flagged', res.message, 'warning');
+      loadData();
+    }
+
+    async function tapGuestStudent() {
+      const res = await fetch(`${API_BASE}/nfc/tap`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId: 'STU202', nfcUid: 'NFC-99GUEST' })
+      }).then(r => r.json());
+      showToast('🚨 Guest Student Entered', res.message, 'warning');
+      loadData();
+    }
+
+    async function tapCurrentStudentNfc() {
+      const st = state.students.find(s => s.id === state.selectedStudentId) || state.students[0];
+      if (st) tapNfcPass(st.id, st.nfc_uid);
+    }
+
+    async function tapFromPhoneWallet() {
+      const sel = document.getElementById('select-phone-student');
+      const st = state.students.find(s => s.id === sel.value);
+      if (st) {
+        await tapNfcPass(st.id, st.nfc_uid);
+        showToast('Mobile Wallet NFC', `Pass sent for ${st.name}`, 'success');
+      }
+    }
+
+    async function toggleSessionState() {
+      const action = state.session?.status === 'ACTIVE' ? 'PAUSE' : 'START';
+      await fetch(`${API_BASE}/session/control`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action })
+      });
+      loadData();
+    }
+
+    async function resetSession() {
+      await fetch(`${API_BASE}/session/control`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'RESET' })
+      });
+      showToast('Session Reset', '45-minute countdown and student dwell timers reset to zero.', 'info');
+      loadData();
+    }
+
+    async function setSessionSpeed(spd) {
+      state.speedMultiplier = spd;
+      [1, 10, 60].forEach(n => {
+        const btn = document.getElementById(`spd-${n}`);
+        if (btn) btn.className = n === spd ? (n === 60 ? 'px-2 py-1 rounded bg-amber-400 text-slate-950 font-bold animate-pulse' : 'px-2 py-1 rounded bg-cyan-500 text-slate-950 font-bold') : 'px-2 py-1 rounded text-slate-400 hover:text-white';
+      });
+      await fetch(`${API_BASE}/session/control`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ speedMultiplier: spd })
+      });
+      showToast('Speed Multiplier Changed', `Session running at ${spd}x speed.`, 'info');
+    }
+
+    async function toggleOfflineMode() {
+      const res = await fetch(`${API_BASE}/hardware/toggle-offline`, { method: 'POST' }).then(r => r.json());
+      showToast(
+        res.offlineMode ? '🔋 Micro-UPS Offline Mode' : '⚡ AC Mains & Cloud Sync Restored',
+        res.offlineMode ? 'Running offline on Micro-UPS battery. SQLite buffering local transactions.' : 'AC mains restored. SQLite transactions synced to cloud.',
+        'info'
+      );
+      loadData();
+    }
+
+    async function purgeBiometricsNow() {
+      const res = await fetch(`${API_BASE}/privacy/purge-now`, { method: 'POST' }).then(r => r.json());
+      showToast('12-Hour Zero Retention Enforced', res.result.message, 'info');
+      loadData();
+    }
+
+    async function reviewException(id, decision) {
+      await fetch(`${API_BASE}/exceptions/${id}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decision })
+      });
+      showToast('Exception Resolved', `Exception resolved as ${decision}. Temporary biometric snapshot purged.`, 'info');
+      loadData();
+    }
+
+    async function editStudentCe(studentId) {
+      const asg = prompt('Enter Lab Assignment Score (0-100):', 90);
+      if (asg === null) return;
+      const qz = prompt('Enter Continuous Quiz Score (0-100):', 90);
+      if (qz === null) return;
+      const prj = prompt('Enter Capstone Project Score (0-100):', 90);
+      if (prj === null) return;
+
+      await fetch(`${API_BASE}/students/${studentId}/ce-grades`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assignmentScore: Number(asg), quizScore: Number(qz), projectScore: Number(prj) })
+      });
+      showToast('CE Grades Saved', 'Continuous Evaluation scores recorded.', 'success');
+      loadData();
+    }
+
+    function connectSSE() {
+      const evtSource = new EventSource('/api/events');
+      evtSource.onmessage = (event) => {
+        try {
+          const { type, payload } = JSON.parse(event.data);
+          if (type === 'SESSION_TICK') {
+            if (state.session) {
+              state.session.elapsed_seconds = payload.elapsedSeconds;
+              state.session.elapsed_minutes = payload.elapsedMinutes;
+              state.session.status = payload.status;
+            }
+            renderFacultyDashboard(payload.engagement);
+          } else if (type === 'STUDENT_VERIFIED_ENTRY' || type === 'PROXY_ALERT' || type === 'GUEST_ENTERED' || type === 'EXCEPTION_REVIEWED' || type === 'SESSION_COMPLETED') {
+            loadData();
+          }
+        } catch (e) {
+          console.warn('SSE parse error:', e);
+        }
+      };
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      connectSSE();
+      startCanvasLoop();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
