@@ -1,146 +1,84 @@
-# 🚀 NIR-OmniVerify AI 2.0: AI-Driven Multi-Factor Ephemeral Attendance System
+# 🎓 UniSync AI: Student & Faculty Ephemeral Attendance Portal
 
-[![React 18](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-5.2-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Node.js](https://img.shields.io/badge/Node.js-20+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![SQLite WAL](https://img.shields.io/badge/SQLite-WAL_Mode-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Privacy Compliance](https://img.shields.io/badge/GDPR%20%2F%20FERPA-12h_Zero_Retention-BCFF00?logo=shield&logoColor=black)](https://gdpr.eu/)
+[![React 18](https://img.shields.io/badge/React-18.3.1-3B82F6?logo=react&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.2-2563EB?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-1D4ED8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-60A5FA?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Privacy Compliance](https://img.shields.io/badge/GDPR%20%2F%20FERPA-12h_Zero_Retention-93C5FD?logo=shield&logoColor=black)](https://gdpr.eu/)
 
-> **A cutting-edge, touchless multi-factor attendance verification ecosystem powered by a Single Overhead AI Camera, Doorway Near-Infrared (NIR) 2FA, 12-Hour Ephemeral Zero-Retention Privacy, and an Offline-First SQLite WAL Architecture.**
-
----
-
-## 🌟 Master System Architecture & Highlights
-
-NIR-OmniVerify AI replaces outdated, proxy-vulnerable biometric fingerprint sensors and manual roll calls with an intelligent, continuous surveillance and multi-factor validation platform.
-
-![AI Attendance Master Mood Board](LIME_GREEN_AI_MOODBOARD.jpg)
-
-### Key Architectural Pillars:
-1. **Single Overhead AI Vision Array**: 
-   - A single ceiling-mounted 4K UHD 120° FOV Near-Infrared camera monitors the entire classroom.
-   - Accumulates minute-by-minute spatial student dwell time and maps real-time engagement heatmaps.
-2. **Doorway Dual-Factor 2FA Verification**:
-   - High-speed 13.56 MHz ISO/IEC 14443A NFC badge scanner coupled with instant 850nm NIR periocular verification.
-   - Eliminates buddy-punching and fraudulent proxy check-ins in under 300ms.
-3. **12-Hour Ephemeral Zero-Retention Protocol**:
-   - Zero persistent storage of raw camera footage or facial biometric vector embeddings.
-   - In-memory volatile RAM processing auto-shreds all temporary exception frames upon instructor review or within a 12-hour cryptographic TTL countdown.
-4. **Offline-First Resilience & Micro-UPS Backup**:
-   - Edge gateway powered by SQLite Write-Ahead Logging (WAL) mode.
-   - Integrated Micro-UPS failover switches in `<4ms`, sustaining autonomous tracking for up to 4.8 hours during campus network or power outages with automatic cloud catch-up sync.
-5. **Unified Cyber Aesthetic & Theme Engine**:
-   - 5 selectable, responsive color palettes:
-     - ⚡ **Electric Lime** (`#BCFF00` • Master Design System)
-     - ❄️ **Quantum Cyan** (`#00F0FF` • High-Tech Arctic HUD)
-     - 🌿 **Matrix Emerald** (`#10B981` • Bio-Cyber Edge)
-     - ☀️ **Solar Amber** (`#F59E0B` • Industrial Telemetry)
-     - 🔮 **Cyber Violet** (`#A855F7` • Holographic Mesh)
-   - Every interface synchronizes dynamically to the **exact same theme color**, glowing icon badges, reticles, and atmospheric background grid.
+> **A high-contrast Blue, Black & White glassmorphic attendance management system designed exclusively for Students and Faculty members.** Built with a 4-tab minimalist navigation (`Home`, `Progress`, `Monitor`, `Profile`) and a dedicated personalized login portal for every member.
 
 ---
 
-## 🖥️ Dedicated User Interfaces
+## 🌟 Key Features
 
-| Interface | Target Role | Key Capabilities |
-| :--- | :--- | :--- |
-| **Faculty Dashboard** | Course Instructors & Professors | Real-time 45-minute lecture progression dial, live student attendance grid, 1-click proxy buddy-punch triage, and Continuous Evaluation (CE) rubric gradebook. |
-| **Student Attendance Portal** | Enrolled Students | Attendance percentage rings with $\ge 75\%$ baseline standing, digital NFC/QR student pass, minute-by-minute dwell log, and 1-click dispute appeal system. |
-| **Admin Telemetry & Audit Hub** | IT Admins & Campus Security | Edge SBC CPU/RAM/Thermal loads, Micro-UPS failover simulator, SQLite offline buffer monitor, and cryptographic 12-hour zero-retention audit trails. |
-| **AI Camera & Video Hub** | Vision Engine & Operators | 30 FPS Near-Infrared camera stream, proposal video playback, live webcam support, glowing multi-face bounding reticles, and spatial engagement density analytics. |
-| **Mobile Phone Connect Node** | Pop-Up / Exam Classrooms | QR-code phone pairing, low-latency wireless WebRTC camera stream node, and simulated smartphone NFC wallet check-in. |
-| **Master Mood Board & Specs** | Portfolio & System Review | High-definition master infographic viewer, color token breakdowns, hardware module specifications, and 1-click PDF export. |
+1. **Dedicated Member Login Pages**:
+   - Every individual student and faculty member has a **personalized login page** featuring their name, digital ID, roll number, NFC badge key, and real-time attendance standing.
+   - **Simulated 2FA Biometric Authentication**: 1-click overhead camera facial vector match and doorway NFC validation.
+   - Quick-switch avatar carousel to seamlessly hop between member login portals.
+   - Manual password and PIN authentication options.
 
----
+2. **Exclusively for Students & Faculty (No Admin Interface)**:
+   - Streamlined, distraction-free environment tailored strictly for classroom learning and academic supervision.
 
-## 🎨 Unified Theme & Iconography Engine
+3. **Minimalist 4-Button Navigation**:
+   - `Home`: Active session card, 45-minute continuous lecture dial, and 1-click door NFC check-in.
+   - `Progress`: Student attendance percentage rings, Continuous Evaluation (CE) breakdown (Assignments, Quizzes, Projects), and 1-click attendance dispute appeal modal.
+   - `Monitor` *(Faculty Only)*: Live classroom attendance grid, real-time attention/dwell tracking, session timer controls, and 1-click proxy review drawer.
+   - `Profile`: Digital holographic ID pass, live 2FA QR code, and 12-hour ephemeral zero-retention privacy certificate.
 
-All interfaces share the **exact same color scheme** controlled by a real-time system switcher:
-- **Glowing Glassmorphism Badges (`IconBadge`)**: Every Lucide icon is wrapped in a theme-reactive glass pill with matching border, glow, and micro-hover interactions.
-- **Dynamic Ambient Atmosphere**: Cybernetic SVG grid background with soft animated glow orbs that shift smoothly with the active theme.
-- **Standardized Status Indicators**: Consistent visual coding across all cards (Present $\ge 45\text{m}$, Review Flag $30\text{--}44\text{m}$, Absent $< 30\text{m}$).
+4. **Deep Blue & Glassmorphic Visual System**:
+   - Frosted glass cards and panels with cyan/blue accents and subtle cyber grid backgrounds.
+   - Glowing frosted glass containers (`IconBadge`) for all Lucide icons.
 
----
-
-## 🛠️ Tech Stack & Dependencies
-
-### Frontend (`/client`)
-- **Framework**: React 18 with Vite
-- **Styling**: TailwindCSS 3.4 & Custom CSS Variables (Glassmorphism, Scanlines, Cyber Reticles)
-- **Icons**: Lucide React (`IconBadge` design pattern)
-- **QR Codes**: `qrcode.react`
-- **State & Theme**: React Context API (`ThemeContext`) with local storage persistence
-- **Audio / Video**: Native HTML5 Canvas + Video Stream HUD
-
-### Backend & Edge (`/server`)
-- **Runtime**: Node.js (ES Modules)
-- **Server**: Native zero-dependency HTTP & Server-Sent Events (SSE) server
-- **Database**: Local SQLite 3 in Write-Ahead Logging (WAL) Mode
-- **Security**: 12-Hour TTL Cryptographic Hash Shredder Daemon
+5. **12-Hour Ephemeral Zero-Retention Privacy**:
+   - Biometric vectors and temporary exception frames are held in volatile memory and automatically wiped upon faculty review or 12-hour expiration.
 
 ---
 
-## 🚀 Quick Start Guide
+## 👥 Pre-Configured Members Directory
 
-### Prerequisites
-- Node.js (v18.0.0 or later)
-- Git
+| Member Name | Role | ID / Roll No | Class / Dept | Initial Standing |
+| :--- | :--- | :--- | :--- | :--- |
+| **Alex Mercer** | Student | `STU101` / `2026-CS-01` | CS401 (AI Systems) | 95.8% (Eligible) |
+| **Sara Lin** | Student | `STU102` / `2026-CS-02` | CS401 (AI Systems) | 91.6% (Eligible) |
+| **Devon Wright** | Student | `STU103` / `2026-CS-03` | CS401 (AI Systems) | 79.2% (Review) |
+| **Elena Evans** | Student | `STU104` / `2026-CS-04` | CS401 (AI Systems) | 96.0% (Eligible) |
+| **Marcus Chen** | Student | `STU105` / `2026-CS-05` | CS401 (AI Systems) | 71.5% (Warning) |
+| **Zoe Nakamura** | Student | `STU106` / `2026-CS-06` | CS401 (AI Systems) | 68.0% (Critical) |
+| **Dr. Evelyn Vance** | Faculty | `FAC001` | Computer Science & AI | AI Lab Director |
+| **Prof. Alan Turing** | Faculty | `FAC002` | Computer Vision & Edge Systems | Research Lead |
 
-### 1. Clone & Setup
-```bash
-git clone https://github.com/killeryt668-ops/AI_ATTENDANCE_MARKER.git
-cd AI_ATTENDANCE_MARKER
-```
+---
 
-### 2. Run Backend Server (Edge AI Node)
-```bash
-cd server
-npm install
-npm start
-```
-*Server starts on `http://localhost:5000` with native SSE and SQLite WAL persistence.*
+## 🛠️ Tech Stack
 
-### 3. Run Frontend Web App (Client)
-Open a new terminal window:
+- **Frontend**: React 18, Vite, TailwindCSS (Deep Onyx & Frosted Blue Glassmorphism)
+- **Icons**: Lucide React with Glassmorphic Badges
+- **QR Engine**: `qrcode.react`
+- **Backend (Optional Live Edge Sync)**: Node.js native HTTP + Server-Sent Events (SSE) + SQLite WAL Mode
+- **Deployment**: Configured for instant 1-click Vercel deployment via `vercel.json`
+
+---
+
+## 🚀 Quick Start
+
+### 1. Run the Web Application
 ```bash
 cd client
 npm install
 npm run dev
 ```
-*Frontend opens at `http://localhost:5173`.*
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 4. Build for Production Bundle
-```bash
-cd client
-npm run build
-```
-*Production assets are compiled to `client/dist`.*
-
----
-
-## 📊 45-Minute Continuous Attendance Rubric
-
-```mermaid
-graph TD
-    A[Student Doorway NFC Tap] --> B{Facial NIR Periocular Match}
-    B -- Match >= 90% --> C[Marked 2FA Verified]
-    B -- Mismatch < 90% --> D[Flagged to Exception Queue]
-    C --> E[Overhead AI Camera Dwell Accumulator]
-    E --> F{Dwell Time after 45m}
-    F -- ">= 45 mins" --> G[FINAL STATUS: PRESENT]
-    F -- "30 - 44 mins" --> H[FINAL STATUS: REVIEW FLAG]
-    F -- "< 30 mins" --> I[FINAL STATUS: ABSENT]
-    D --> J[Faculty 1-Click Triage]
-    J -- Approved --> G
-    J -- Rejected --> I
-    J --> K[12-Hour Volatile TTL Purge]
-```
+### 2. Deploy to Vercel
+1. Import repository `https://github.com/killeryt668-ops/AI_ATTENDANCE_MARKER.git` on [Vercel](https://vercel.com).
+2. Set Framework Preset to **Vite** and Root Directory to **`client`** (or leave as root with the included `vercel.json`).
+3. Click **Deploy**! No environment variables required.
 
 ---
 
 ## 📄 License & Attribution
 
-Designed and developed for academic innovation and edge computer vision portfolios.
-- **Author**: `killeryt668-ops`
-- **Architecture**: Single Camera AI Vision + 12h Zero-Retention Privacy Protocol
+Developed for computer vision classroom attendance and portfolio demonstration.
+- **Repository**: [killeryt668-ops/AI_ATTENDANCE_MARKER](https://github.com/killeryt668-ops/AI_ATTENDANCE_MARKER)
