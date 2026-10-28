@@ -1,0 +1,11 @@
+{
+  "name": "ai-attendance-marker",
+  "version": "2.0.0",
+  "private": true,
+  "description": "NIR-OmniVerify AI 2.0: AI-Driven Multi-Factor Ephemeral Attendance System",
+  "scripts": {
+    "build": "npm --prefix client run build",
+    "dev": "npm --prefix client run dev",
+    "server": "npm --prefix server start"
+  }
+}
